@@ -5,3 +5,67 @@
 \fi}
 
 ในบทนี้จะทดสอบเกี่ยวกับการทำงานในฟังก์ชันหลักๆ
+
+
+\section{Objective (วัตถุประสงค์การทดสอบ)}
+\begin{enumerate}
+    \item ตรวจสอบความสามารถของโมเดล CNN-LSTM ในการ แยกแยะสถานะ normal และ anomaly จาก SWaT dataset
+    \item วัดประสิทธิภาพของโมเดลตามตัวชี้วัดมาตรฐาน:
+    \begin{enumerate}
+        \item Precision, Recall, F1-score, AUC
+        \item Detection Delay และ Latency สำหรับการทดสอบแบบ real-time
+    \end{enumerate}
+    \item ตรวจสอบ robustness ของโมเดลต่อ:
+    \begin{enumerate}
+        \item Noise (sensor fluctuation)
+        \item Missing data
+        \item Concept drift หรือ pattern ใหม่ที่ไม่เคยเห็น
+    \end{enumerate}
+    \item เปรียบเทียบ performance กับ baseline models เช่น LSTM, CNN, Autoencoder
+\end{enumerate}
+
+\section{Requirements (ข้อกำหนดการทดสอบ)}
+\subsection{Functional Requirements (ข้อกำหนดเชิงฟังก์ชัน)}
+\begin{enumerate}
+    \item โมเดลต้องสามารถจำแนก Normal vs Anomaly สำหรับข้อมูล time-series
+    \item สามารถแจ้งเตือน (Alert) เมื่อพบ anomaly ได้แบบ real-time หรือ batch
+    \item รองรับ input จาก sensor/actuator ตาม SWaT dataset
+    \item มี visualization/logging ของผลลัพธ์และ reconstruction error (ถ้ามี)
+\end{enumerate}
+
+\subsection{Non-Functional Requirements (ข้อกำหนดไม่เชิงฟังก์ชัน)}
+\begin{enumerate}
+    \item Accuracy: F1-score $\ge$ 85\% (ตัวอย่าง benchmark)
+    \item Latency: การทำนาย ≤ 20 ms ต่อ window (real-time)
+    \item Robustness: Performance degradation ≤ $\ge$ 10\% เมื่อมี noise/missing data
+    \item Scalability: รองรับจำนวน sensor ≥ 50 และ batch size ≥ 64
+    \item Usability: รายงานผลลัพธ์ในรูปแบบตาราง/กราฟเข้าใจง่าย
+\end{enumerate}
+
+\subsection{Dataset Requirements}
+\begin{enumerate}
+    \item ใช้ SWaT dataset: Normal logs สำหรับ train, Normal + Attack logs สำหรับ test
+    \item แบ่งข้อมูลเป็น training/validation/test sets อย่างเหมาะสม
+    \item Preprocessing: normalization, windowing, imputation for missing data
+\end{enumerate}
+
+\section{Testing Strategy (กลยุทธ์การทดสอบ)}
+\subsection{Types of Testing}
+\begin{enumerate}
+    \item Functional Testing:
+    \begin{enumerate}
+        \item ตรวจสอบว่าโมเดลสามารถระบุ anomaly ใน test set ได้ถูกต้อง
+        \item ตรวจสอบ alert system สำหรับ online detection
+    \end{enumerate}
+    \item Performance Testing:
+    \begin{enumerate}
+        \item ประเมิน Precision, Recall, F1-score, AUC
+        \item วัด latency และ throughput
+    \end{enumerate}
+    \item Robustness Testing:
+    \begin{enumerate}
+        \item เพิ่ม noise ในข้อมูล sensor
+        \item ลอง missing values (random drop)
+        \item ตรวจสอบ model performance ต่อ concept drift หรือ attack ใหม่
+    \end{enumerate}\item Comparison Testing: \\ เปรียบเทียบกับ baseline models: LSTM, CNN, Autoencoder
+\end{enumerate}
