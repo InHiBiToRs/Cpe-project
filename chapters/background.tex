@@ -2,127 +2,155 @@
 
 การทำโครงงาน เริ่มต้นด้วยการศึกษาค้นคว้า ทฤษฎีที่เกี่ยวข้อง หรือ งานวิจัย/โครงงาน ที่เคยมีผู้นำเสนอไว้แล้ว ซึ่งเนื้อหาในบทนี้ก็จะเกี่ยวกับการอธิบายถึงสิ่งที่เกี่ยวข้องกับโครงงาน เพื่อให้ผู้อ่านเข้าใจเนื้อหาในบทถัดๆ ไปได้ง่ายขึ้น
 
-\section{The first section}
-The text for Section 1 goes here.
+\section{Operational Technology (OT) และ Industrial Control Systems (ICS)}
 
-\section{Second section}
-Section 2 text.
+\hspace{2em} Operational Technology (OT) คือเทคโนโลยีที่ใช้สำหรับตรวจสอบและควบคุมกระบวนการทางกายภาพในโรงงานอุตสาหกรรมหรือโครงสร้างพื้นฐานที่สำคัญ เช่น ระบบไฟฟ้า ระบบน้ำมัน และระบบบำบัดน้ำเสีย จุดเด่นของ OT คือการทำงานที่ต้องเน้น ความต่อเนื่อง ความเสถียร และความปลอดภัย มากกว่า IT (Information Technology) ที่มุ่งเน้นการประมวลผลข้อมูลและธุรกรรมเป็นหลัก
 
-\subsection{Subsection heading goes here}
+\subsubsection*{Industrial Control Systems (ICS) เป็นกลุ่มของระบบที่ใช้ควบคุมและจัดการการทำงานของ OT โดยมีตัวอย่างที่สำคัญ ได้แก่}
+\begin{enumerate}
+  \item Supervisory Control and Data Acquisition (SCADA) ใช้สำหรับควบคุมและตรวจสอบระบบขนาดใหญ่ที่กระจายตัว
+  \item Distributed Control System (DCS) ใช้ควบคุมกระบวนการแบบต่อเนื่อง เช่น โรงกลั่นน้ำมัน
+  \item Programmable Logic Controller (PLC) ใช้ในกระบวนการที่ต้องการการควบคุมแบบเฉพาะกิจ
+\end{enumerate}
 
-Subsection 1 text
+\section{ความมั่นคงปลอดภัยไซเบอร์ในระบบ OT/ICS}
 
-\subsubsection{Subsubsection 1 heading goes here}
-Subsubsection 1 text
+\hspace{2em} ระบบ ICS เดิมถูกออกแบบมาเพื่อเน้นความทนทานและการทำงานอย่างต่อเนื่อง โดยไม่ได้คำนึงถึงการป้องกันภัยไซเบอร์ ทำให้มีช่องโหว่ต่อการโจมตี เช่น:
+\begin{enumerate}
+  \item Stuxnet (2010): มัลแวร์ที่แทรกแซงการทำงานของ PLC ในโรงงานนิวเคลียร์อิหร่าน
+  \item Ukraine Power Grid Attack (2015): การโจมตีระบบไฟฟ้าทำให้เกิดการดับไฟในวงกว้าง
+\end{enumerate}
+\indent
+กรณีศึกษาดังกล่าวสะท้อนว่าภัยคุกคามไซเบอร์สามารถสร้างความเสียหายทั้งด้านเศรษฐกิจ ความมั่นคง และความปลอดภัยของประชาชน การพัฒนา ระบบตรวจจับความผิดปกติ (Anomaly Detection) จึงมีความสำคัญอย่างยิ่งใน OT
 
-\subsubsection{Subsubsection 2 heading goes here}
-Subsubsection 2 text
+\subsection{Anomaly Detection}
+\hspace{2em} Anomaly Detection คือกระบวนการระบุข้อมูลที่เบี่ยงเบนไปจากรูปแบบปกติ ซึ่งอาจเกิดจากการโจมตี ความผิดพลาดของอุปกรณ์ หรือความผิดปกติของกระบวนการ โดยทั่วไปแบ่งได้เป็น 3 ประเภท:
 
-\section{Third section}
-Section 3 text. The dielectric constant\index{dielectric constant}
-at the air-metal interface determines
-the resonance shift\index{resonance shift} as absorption or capture occurs
-is shown in Equation~\eqref{eq:dielectric}:
+\begin{enumerate}
+  \item Point Anomaly: ข้อมูลจุดเดียวที่ผิดปกติ (เช่น ค่า Sensor พุ่งสูงกว่าปกติ)
+  \item Contextual Anomaly: ข้อมูลที่ปกติในบางบริบท แต่ผิดปกติในอีกบริบทหนึ่ง (เช่น ค่าน้ำสูงในฤดูฝนเป็นเรื่องปกติ แต่สูงในฤดูแล้งถือว่าผิดปกติ)
+  \item Collective Anomaly: ลำดับข้อมูลหลายจุดที่รวมกันแล้วผิดปกติ (เช่น การทำงานของ Pump และ Valve ที่ไม่สัมพันธ์กัน)
+\end{enumerate}
+\indent
+สำหรับระบบ ICS Collective Anomaly มีความสำคัญมาก เนื่องจากข้อมูลจาก Sensor และ Actuator อยู่ในรูปแบบ Time-Series ที่ต้องพิจารณาลำดับเวลา
 
-\begin{equation}\label{eq:dielectric}
-k_1=\frac{\omega}{c({1/\varepsilon_m + 1/\varepsilon_i})^{1/2}}=k_2=\frac{\omega
-\sin(\theta)\varepsilon_\mathit{air}^{1/2}}{c}
-\end{equation}
+\section{ Secure Water Treatment (SWaT) Dataset}
+\hspace{2em} Secure Water Treatment (SWaT) Dataset เป็นชุดข้อมูลที่สร้างขึ้นจากโรงงานจำลองระบบบำบัดน้ำ (Water Treatment Testbed) โดย iTrust Lab, Singapore University of Technology and Design (SUTD) มีวัตถุประสงค์เพื่อใช้เป็น มาตรฐานกลาง (benchmark) สำหรับการวิจัยด้านความปลอดภัยไซเบอร์ในระบบควบคุมอุตสาหกรรม (ICS/SCADA)
 
-\noindent
-where $\omega$ is the frequency of the plasmon, $c$ is the speed of
-light, $\varepsilon_m$ is the dielectric constant of the metal,
-$\varepsilon_i$ is the dielectric constant of neighboring insulator,
-and $\varepsilon_\mathit{air}$ is the dielectric constant of air.
+\subsubsection{โครงสร้างของระบบ SWaT}
+โรงงานจำลอง SWaT ออกแบบให้มีลักษณะใกล้เคียงโรงงานจริง โดยแบ่งออกเป็น 6 กระบวนการย่อย (Processes/Stages):
 
-\section{About using figures in your report}
+\begin{enumerate}
+  \item P1: Raw Water Supply – ระบบสูบน้ำดิบเข้าสู่ถังเก็บ
+  \item P2: Pre-treatment – การกรองเบื้องต้น (Ultrafiltration)
+  \item P3: Chemical Dosing – การเติมสารเคมี เช่น กรด-ด่าง เพื่อปรับค่า pH
+  \item P4: Membrane-based Ultra-Filtration – การกรองละเอียดด้วยเมมเบรน
+  \item P5: Dechlorination – การกำจัดคลอรีนที่เหลืออยู่
+  \item P6: Backwash and Product Storage – การล้างย้อนและการเก็บน้ำสะอาดในถังเก็บสุดท้าย
+\end{enumerate}
+\indent
+ในแต่ละกระบวนการจะมีการติดตั้ง เซนเซอร์ (sensors) และ แอกชูเอเตอร์ (actuators) เช่น ปั๊ม (pumps), วาล์ว (valves), และเครื่องวัดระดับน้ำ (level sensors) ซึ่งควบคุมด้วย PLC (Programmable Logic Controllers) และเฝ้าติดตามผ่านระบบ SCADA
 
-% define a command that produces some filler text, the lorem ipsum.
-\newcommand{\loremipsum}{
-  \textit{Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-  minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-  aliquip ex ea commodo consequat. Duis aute irure dolor in
-  reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-  pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-  culpa qui officia deserunt mollit anim id est laborum.}\par}
+\subsubsection{ประเภทตัวแปรใน Dataset}
+\hspace{2em} ข้อมูลที่บันทึกจาก SWaT เป็น Time-Series รายวินาที (1 sample/second) ครอบคลุมช่วงเวลา 11 วัน รวม 946,722 records และ 51 attributes
 
-\begin{figure}
-  \centering
+\subsubsection{ข้อมูลทางกายภาพ (Physical Properties)}
+\begin{enumerate}
+  \item Sensors (ตัวแปรต่อเนื่อง)
+  \begin{enumerate}
+    \item Flow (อัตราการไหล)
+    \item Level (ระดับน้ำ)
+    \item Pressure (ความดัน)
+    \item Conductivity (ค่าการนำไฟฟ้า)
+    \item pH (กรด-ด่าง)
+    \item ORP (Oxidation-Reduction Potential)
+    \item Temperature (อุณหภูมิ)
+  \end{enumerate}
+  \item Actuators (ตัวแปรไม่ต่อเนื่อง)
+  \begin{enumerate}
+    \item ปั๊ม (Pumps – เปิด/ปิด)
+    \item วาล์ว (Motorized Valves – เปิด/ปิด)
+    \item Dosing Pumps (สำหรับจ่ายสารเคมี)
+  \end{enumerate}
+\end{enumerate}
 
-  \fbox{
-     \parbox{.6\textwidth}{\loremipsum}
-  }
+\subsubsection{สถานการณ์การโจมตี (Attack Scenarios)}
+\hspace{2em} ในการทดลอง มีการออกแบบการโจมตีทั้งหมด 36 รูปแบบ แบ่งเป็น:
 
-  % To include an image in the figure, say myimage.pdf, you could use
-  % the following code. Look up the documentation for the package
-  % graphicx for more information.
-  % \includegraphics[width=\textwidth]{myimage}
+\begin{enumerate}
+  \item Single Stage Single Point (SSSP) – โจมตีจุดเดียวในกระบวนการเดียว (26 ครั้ง)
+  \item Single Stage Multi Point (SSMP) – โจมตีหลายจุดในกระบวนการเดียว (4 ครั้ง)
+  \item Multi Stage Single Point (MSSP) – โจมตี 1 จุด แต่มีผลกระทบหลายกระบวนการ (2 ครั้ง)
+  \item Multi Stage Multi Point (MSMP) – โจมตีหลายจุดในหลายกระบวนการ (4 ครั้ง)
+\end{enumerate}
 
-  \caption[Sample figure]{This figure is a sample containing \gls{lorem ipsum},
-  showing you how you can include figures and glossary in your report.
-  You can specify a shorter caption that will appear in the List of Figures.}
-  \label{fig:sample-figure}
-\end{figure}
+\subsubsection*{ตัวอย่าง:}
+\begin{enumerate}
+  \item ปลอมค่าจาก LIT101 (Level Sensor) ทำให้ระบบเข้าใจผิดว่าน้ำเต็มถัง และสั่งหยุดปั๊ม ส่งผลให้น้ำล้น (Overflow)
+  \item ปลอมค่าจาก LIT301 ให้แสดงค่าสูงผิดปกติ ส่งผลให้ปั๊มทำงานต่อแม้น้ำหมด และเกิด Underflow และอาจทำให้ปั๊มเสียหาย
+\end{enumerate}
 
-Using \verb.\label. and \verb.\ref. commands allows us to refer to
-figures easily. If we can refer to Figures
-\ref{fig:walrus} and \ref{fig:sample-figure} by name in the {\LaTeX}
-source code, then we will not need to update the code that refers to it
-even if the placement or ordering of the figures changes.
+\section{Machine Learning}
+\hspace{2em} Machine Learning (ML) เป็นแขนงหนึ่งของปัญญาประดิษฐ์ (Artificial Intelligence: AI) ที่ช่วยให้ระบบสามารถเรียนรู้และปรับปรุงประสิทธิภาพจากข้อมูล โดยไม่ต้องเขียนกฎแบบตายตัวล่วงหน้า การป้อนข้อมูลจำนวนมากที่หลากหลายช่วยให้โมเดลสามารถสกัดรูปแบบ (patterns) และปรับปรุงความ \\ แม่นยำได้อย่างต่อเนื่อง
 
-\loremipsum\loremipsum
+สำหรับโครงการนี้ ML ถูกนำมาใช้ในการตรวจจับความผิดปกติ (Anomaly Detection) ใน ข้อมูลเชิงเวลา (time-series) ที่ได้จาก ระบบควบคุมอุตสาหกรรม (ICS/OT) ซึ่งประกอบด้วยเซนเซอร์และแอกชูเอเตอร์ในระบบบำบัดน้ำ (SWaT dataset)
 
-% This code demonstrates how to get a landscape table or figure. It
-% uses the package lscape to turn everything but the page number into
-% landscape orientation. Everything should be included within an
-% \afterpage{ .... } to avoid causing a page break too early.
-\afterpage{
-  \begin{landscape}
-  \begin{table}
-    \caption{Sample landscape table}
-    \label{tab:sample-table}
+\section{Convolutional Neural Network – Long Short-Term Memory (CNN-LSTM)}
+\hspace{2em} การตรวจจับความผิดปกติในข้อมูลเชิงเวลา (time-series anomaly detection) จำเป็นต้องอาศัยโมเดลที่สามารถสกัดคุณลักษณะเชิงลึกและในขณะเดียวกันต้องเข้าใจความสัมพันธ์เชิงลำดับเวลา โมเดล \\ CNN-LSTM จึงถูกนำมาใช้เพราะผสานข้อดีของ Convolutional Neural Network (CNN) และ Long Short-Term Memory (LSTM) เข้าด้วยกัน ทำให้สามารถจัดการกับข้อมูลจากระบบควบคุมอุตสาหกรรม (ICS) ที่มีความซับซ้อนสูงได้อย่างมีประสิทธิภาพ โดยเฉพาะข้อมูลจาก SWaT dataset ซึ่งประกอบด้วยข้อมูลจาก sensor และ actuator ที่บันทึกเป็นลำดับเวลา
 
-    \centering
+\subsection{Convolutional Neural Network (CNN)}
+\hspace{2em} CNN เป็นโครงข่ายประสาทเทียมที่พัฒนาขึ้นเพื่อตรวจจับและสกัดคุณลักษณะสำคัญจากข้อมูล โดยอาศัยการทำงานของ convolution filters ที่เลื่อนผ่านข้อมูลเพื่อค้นหารูปแบบซ้ำหรือความเปลี่ยนแปลงที่มีนัยสำคัญ ในบริบทของข้อมูลเชิงเวลา CNN สามารถทำหน้าที่ตรวจสอบการเปลี่ยนแปลงของค่า sensor ในช่วงสั้น ๆ ได้อย่างมีประสิทธิภาพ เช่น การแกว่งของระดับน้ำหรือการเปลี่ยนแปลงค่าความดันอย่างเฉียบพลัน นอกจากนี้ CNN ยังช่วยลดสัญญาณรบกวน (noise) และเน้นคุณลักษณะที่บ่งบอกถึงความผิดปกติได้อย่างชัดเจน
 
-    \begin{tabular}{c||c|c}
-        Year & A & B \\
-        \hline\hline
-        1989 & 12 & 23 \\
-        1990 & 4 & 9 \\
-        1991 & 3 & 6 \\
-    \end{tabular}
-  \end{table}
-  \end{landscape}
-}
+\subsection{Long Short-Term Memory (LSTM)}
+\hspace{2em} LSTM เป็นโครงข่ายประสาทเทียมแบบ Recurrent Neural Network (RNN) ที่ถูกออกแบบมาเพื่อแก้ไขข้อจำกัดด้านการจำข้อมูลระยะยาวของ RNN ทั่วไป โดยใช้โครงสร้างที่มีกลไกสำคัญคือ forget gate, input gate และ output gate เพื่อกำหนดว่าข้อมูลใดควรถูกเก็บรักษาไว้และข้อมูลใดควรถูกลืมไป ทำให้ LSTM สามารถเรียนรู้ความสัมพันธ์ที่ซับซ้อนและยาวนานของข้อมูลเชิงเวลาได้อย่างมีประสิทธิภาพ สำหรับข้อมูลจาก SWaT dataset LSTM สามารถตรวจสอบความเชื่อมโยงของ sensor และ actuator ที่ทำงานต่อเนื่องหลายขั้นตอน เช่น ลำดับการเปิดปิดของปั๊มและวาล์ว ซึ่งอาจเป็นปัจจัยสำคัญที่ทำให้เกิดความผิดปกติในกระบวนการ
 
-\loremipsum\loremipsum\loremipsum
+\subsection{CNN-LSTM for Anomaly Detection}
+\hspace{2em} การผสมผสาน CNN และ LSTM เข้าไว้ด้วยกันในโมเดล CNN-LSTM ทำให้สามารถใช้ CNN ในการสกัดคุณลักษณะสำคัญจากข้อมูลเชิงเวลาในช่วงสั้น แล้วส่งผลลัพธ์ต่อให้ LSTM เพื่อเรียนรู้ความสัมพันธ์ที่ต่อเนื่องในระยะยาว แนวทางนี้ช่วยให้โมเดลสามารถจับพฤติกรรมผิดปกติที่ซับซ้อนในระบบ ICS ได้ดียิ่งขึ้น เมื่อเปรียบเทียบกับการใช้ CNN หรือ LSTM เพียงอย่างเดียว งานวิจัยจำนวนมากยืนยันว่าโมเดล CNN-LSTM มีประสิทธิภาพในการลดอัตราการตรวจจับผิดพลาด (false positives) และเพิ่มความแม่นยำในการตรวจจับ anomaly ได้ โดยเฉพาะอย่างยิ่งเมื่อใช้กับข้อมูลที่มีลักษณะ time-series แบบหลายตัวแปร (multivariate time-series) เช่นใน SWaT dataset
 
-\section{Overfull hbox}
+\subsection{Dense Layer และ Fully Connected Layer}
+\hspace{2em} หลังจากที่ CNN และ LSTM ทำหน้าที่สกัดคุณลักษณะและจับความสัมพันธ์เชิงเวลาแล้ว ผลลัพธ์ที่ได้จะถูกส่งต่อไปยัง Dense Layer หรือ Fully Connected Layer เพื่อทำการรวมข้อมูลและสร้างการตัดสินใจสุดท้าย Dense Layer ทำงานโดยเชื่อมต่อทุกนิวรอนกับนิวรอนในชั้นถัดไป ช่วยให้โมเดลสามารถเรียนรู้การรวมคุณลักษณะที่ซับซ้อนและสร้างการจำแนก (classification) ระหว่างเหตุการณ์ปกติและเหตุการณ์ผิดปกติได้อย่างมีประสิทธิภาพ
+ในโครงการนี้ Dense Layer ทำหน้าที่แปลง representation ที่ได้จาก CNN-LSTM ให้กลายเป็นค่าความน่าจะเป็น (probability) ของ class เช่น Normal (0) และ Anomaly (1)
 
-When the \verb.semifinal. option is passed to the \verb.cpecmu. document class,
-any line that is longer than the line width, i.e., an overfull hbox, will be
-highlighted with a black solid rule:
-\begin{center}
-\begin{minipage}{2em}
-juxtaposition
-\end{minipage}
-\end{center}
+\subsection{Activation Functions}
+\hspace{2em} ฟังก์ชันกระตุ้น (Activation Functions) เป็นองค์ประกอบสำคัญของ Dense Layer ซึ่งใช้ในการกำหนดเส้นแบ่งเชิงเส้นหรือไม่เชิงเส้น เช่น:
+\begin{enumerate}
+  \item ReLU (Rectified Linear Unit): ใช้ในชั้นซ่อน (hidden layers) ของ CNN และ LSTM เพื่อลดปัญหา vanishing gradient และเร่งการเรียนรู้
+  \item Sigmoid: เหมาะกับการจำแนกแบบ binary anomaly detection เนื่องจากผลลัพธ์อยู่ระหว่าง 0–1
+  \item Softmax: ใช้สำหรับ multi-class anomaly detection เมื่อมีความผิดปกติหลายประเภท
+\end{enumerate}
 
-\section{\ifenglish%
-\ifcpe CPE \else ISNE \fi knowledge used, applied, or integrated in this project
-\else%
-ความรู้ตามหลักสูตรซึ่งถูกนำมาใช้หรือบูรณาการในโครงงาน
-\fi
-}
+\subsection{Regularization Layers (Dropout และ Batch Normalization)}
+\hspace{2em} เพื่อป้องกันการเกิด overfitting จากข้อมูลที่มีความซับซ้อนสูง เช่น SWaT dataset การเพิ่ม Regularization Layers มีความสำคัญมาก ได้แก่:
+\begin{enumerate}
+  \item Dropout Layer: ทำการสุ่มปิดบางนิวรอนระหว่างการฝึก เพื่อป้องกันไม่ให้โมเดลจดจำข้อมูลมากเกินไป แต่ช่วยให้เกิดการเรียนรู้ที่ครอบคลุมมากขึ้น
+  \item Batch Normalization: ช่วยปรับค่าการกระจายของข้อมูลในแต่ละชั้นให้อยู่ในช่วงที่เหมาะสม ทำให้การฝึกโมเดลเสถียรและรวดเร็วขึ้น
+\end{enumerate}
 
-อธิบายถึงความรู้ และแนวทางการนำความรู้ต่างๆ ที่ได้เรียนตามหลักสูตร ซึ่งถูกนำมาใช้ในโครงงาน
+\section{Correlation Matrix}
+\hspace{2em} Correlation Matrix เป็นเครื่องมือเชิงสถิติที่ใช้วิเคราะห์ความสัมพันธ์ระหว่างตัวแปรหลายตัวพร้อมกัน โดยจะแสดงค่า Correlation Coefficient ที่มีค่าตั้งแต่ -1 ถึง 1
+\begin{enumerate}
+  \item ค่า 1 หมายถึงความสัมพันธ์เชิงบวกอย่างสมบูรณ์ (เมื่อค่าของตัวแปรหนึ่งเพิ่ม อีกตัวก็เพิ่มตาม)
+  \item ค่า -1 หมายถึงความสัมพันธ์เชิงลบอย่างสมบูรณ์ (เมื่อค่าของตัวแปรหนึ่งเพิ่ม อีกตัวจะลดลง)
+  \item ค่า 0 หมายถึงไม่มีความสัมพันธ์
+\end{enumerate}
+สำหรับ SWaT dataset การสร้าง Correlation Matrix มีความสำคัญในหลายประเด็น ได้แก่
+\begin{enumerate}
+  \item การทำความเข้าใจความสัมพันธ์ของ Sensor และ Actuator: เช่น ระดับน้ำ (Level) ควรมีความสัมพันธ์กับการทำงานของปั๊ม (Pump) และวาล์ว (Valve)
+  \item การตรวจหาความผิดปกติ (Anomaly): หาก correlation ระหว่าง sensor และ actuator ไม่เป็นไปตามปกติ เช่น ค่า Flow ไม่สัมพันธ์กับการเปิดปิด Valve อาจบ่งชี้ถึงการโจมตีหรือความผิดปกติในกระบวนการ
+  \item Feature Selection: การวิเคราะห์ความสัมพันธ์ช่วยคัดเลือกตัวแปรที่สำคัญ และลด \\ multicollinearity เพื่อลด noise ก่อนนำเข้าสู่โมเดล Machine Learning
+\end{enumerate}
+\indent
+การใช้ Correlation Matrix จึงเป็นขั้นตอนสำคัญใน Exploratory Data Analysis (EDA) ของโครงการนี้ เพื่อทำให้การออกแบบและฝึกสอนโมเดล anomaly detection มีความถูกต้องและแม่นยำมากขึ้น
 
-\section{\ifenglish%
-Extracurricular knowledge used, applied, or integrated in this project
-\else%
-ความรู้นอกหลักสูตรซึ่งถูกนำมาใช้หรือบูรณาการในโครงงาน
-\fi
-}
-
-อธิบายถึงความรู้ต่างๆ ที่เรียนรู้ด้วยตนเอง และแนวทางการนำความรู้เหล่านั้นมาใช้ในโครงงาน
+\section{Model Evaluation}
+การประเมินผลลัพธ์ของโมเดลมีความสำคัญอย่างยิ่ง เนื่องจากเป็นวิธีการตรวจสอบความถูกต้องและความน่าเชื่อถือของโมเดลในการตรวจจับความผิดปกติจากข้อมูลจริง โดยเฉพาะอย่างยิ่งในกรณีของ SWaT dataset ซึ่งมีลักษณะข้อมูล ไม่สมดุล (imbalanced data) กล่าวคือ ข้อมูลเหตุการณ์ปกติ (Normal) มีจำนวนมากกว่าข้อมูลเหตุการณ์ผิดปกติ (Anomaly) อย่างมาก การใช้ตัวชี้วัด (Evaluation Metrics) ที่เหมาะสมจึงมีบทบาทสำคัญในการสะท้อนศักยภาพของโมเดลได้อย่างครบถ้วน
+\\ ตัวชี้วัดที่ใช้ประกอบการประเมินในโครงการนี้ ได้แก่:
+\begin{enumerate}
+\item Accuracy \\ เป็นสัดส่วนของจำนวนข้อมูลทั้งหมดที่โมเดลสามารถจำแนกได้ถูกต้อง แต่เนื่องจากข้อมูลมีความ \\ ไม่สมดุล ค่าความแม่นยำ (accuracy) เพียงอย่างเดียวอาจไม่สะท้อนศักยภาพของโมเดลได้อย่างแท้จริง เพราะโมเดลที่ทำนายว่าข้อมูลเป็น “ปกติ” ตลอดเวลาอาจได้ค่า accuracy สูง แต่ไม่สามารถตรวจจับ anomaly ได้เลย
+\item Precision \\ เป็นตัวชี้วัดความถูกต้องของการทำนาย anomaly หมายถึง ในจำนวนทั้งหมดที่โมเดลทำนายว่า “ผิดปกติ” มีสัดส่วนเท่าใดที่เป็น anomaly จริง Precision ที่สูงบ่งชี้ว่าโมเดลสามารถลดการแจ้งเตือนผิดพลาด (False Positives) ได้
+\item Recall (Sensitivity) \\ เป็นตัวชี้วัดความสามารถของโมเดลในการตรวจจับ anomaly ได้ครบถ้วน หมายถึงในจำนวน \\ anomaly ทั้งหมดที่มีอยู่โมเดลสามารถตรวจพบได้กี่กรณี Recall จึงมีความสำคัญอย่างยิ่งในงาน ICS/OT anomaly detection เพราะการพลาดการตรวจจับ anomaly เพียงเล็กน้อยอาจก่อให้เกิดผลกระทบต่อความปลอดภัยและการดำเนินงานของระบบ
+\item F1-score \\ เป็นค่าเฉลี่ยเชิงฮาร์โมนิก (Harmonic Mean) ระหว่าง Precision และ Recall ทำให้สะท้อนสมดุลระหว่างการลดการแจ้งเตือนผิดพลาดและการเพิ่มอัตราการตรวจจับ anomaly ได้อย่างเหมาะสม โดยเฉพาะอย่างยิ่งใน dataset ที่มี class imbalance
+\item Confusion Matrix \\ เป็นตารางที่แสดงการจำแนกผลลัพธ์ของโมเดลอย่างละเอียดในรูปของ True Positive (TP), True Negative (TN), False Positive (FP) และ False Negative (FN) ช่วยให้สามารถวิเคราะห์ข้อผิดพลาดของโมเดลได้เชิงลึก และชี้ชัดว่าปัญหาของโมเดลอยู่ที่การตรวจจับ anomaly ไม่เพียงพอ (Recall ต่ำ) หรือการแจ้งเตือนผิดพลาดสูง (Precision ต่ำ)
+\item ROC-AUC (Receiver Operating Characteristic – Area Under Curve) \\ เป็นการประเมินสมรรถนะของโมเดลโดยไม่ขึ้นกับ threshold โดยใช้ค่า True Positive Rate และ False Positive Rate มาวิเคราะห์เส้นโค้ง (ROC Curve) ค่า AUC ที่สูงใกล้ 1 บ่งชี้ว่าโมเดลสามารถจำแนก anomaly ออกจาก normal ได้อย่างมีประสิทธิภาพ
+\item PR-AUC (Precision-Recall Area Under Curve) \\ เป็นการวัดสมรรถนะที่เหมาะสมอย่างยิ่งสำหรับข้อมูลที่ไม่สมดุล (imbalanced dataset) โดยแสดงความสัมพันธ์ระหว่าง Precision และ Recall ตลอดทุก threshold ค่าที่สูงใกล้ 1 แสดงว่าโมเดลมีความสามารถในการตรวจจับ anomaly ได้ดีแม้ในสภาพที่ anomaly มีสัดส่วนค่อนข้างน้อย
+\end{enumerate}
