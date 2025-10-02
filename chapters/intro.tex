@@ -28,7 +28,7 @@
     \item การนำเข้าข้อมูลจะใช้วิธีการอ่านไฟล์ CSV และเตรียมข้อมูลให้อยู่ในรูปแบบที่เหมาะสมต่อการประมวลผล
 \end{enumerate}
 
-\subsubsection{การตรวจจับและจำแนกความผิดปกติ (Threat Detection and Classification) }
+\subsubsection{การตรวจจับและจำแนกความผิดปกติ (Threat Detection \& Classification) }
 \begin{enumerate}
     \item มุ่งเน้นการตรวจจับเหตุการณ์ที่มีลักษณะผิดปกติ เช่น การเปลี่ยนค่าของเซนเซอร์อย่างผิดธรรมชาติ หรือการสั่งการอุปกรณ์ที่ไม่สอดคล้องกับกระบวนการจริง
     \item การจำแนกความผิดปกติออกเป็นสองกลุ่มหลัก ได้แก่
@@ -46,7 +46,7 @@
     \item การสร้าง sliding windows สำหรับข้อมูลเชิงเวลา (time-series) เพื่อเตรียมให้เป็นอินพุตของโมเดล
 \end{enumerate}
 
-\subsubsection{การสร้างโมเดลและเปรียบเทียบประสิทธิภาพ (Model Comparison and Performance Evaluation)}
+\subsubsection{การสร้างโมเดลและเปรียบเทียบประสิทธิภาพ (Model Comparison \& Performance Evaluation)}
 \begin{enumerate}
     \item พัฒนาโมเดลตรวจจับความผิดปกติที่อิงกับ Deep Learning ได้แก่ 
     \begin{enumerate}
@@ -114,7 +114,7 @@
     \item ใช้ GPU จากบริการ Google Colab เพื่อเร่งความเร็วในการฝึกโมเดลเชิงลึก (Deep Learning)
 \end{enumerate}
 
-\subsubsection{เฟรมเวิร์กและไลบรารีสำหรับ Machine Learning (Frameworks and Libraries)}
+\subsubsection{เฟรมเวิร์กและไลบรารีสำหรับ Machine Learning (Frameworks \& Libraries)}
 \begin{enumerate}
     \item Scikit-learn: สำหรับ preprocessing การสร้าง baseline model และการประเมินผลเบื้องต้น
     \item TensorFlow และ PyTorch: สำหรับการพัฒนาและฝึกโมเดลเชิงลึก (Deep Learning) เช่น CNN และ LSTM
@@ -128,17 +128,47 @@
     \item GitHub: สำหรับการจัดการซอร์สโค้ดและการทำงานร่วมกัน
 \end{enumerate}
 
+\newpage
 \section{\ifenglish Project plan\else แผนการดำเนินงาน\fi}
-
 \begin{plan}{6}{2025}{2}{2026}
-    \planitem{7}{2025}{8}{2025}{ศึกษาค้นคว้า}
-    \planitem{8}{2025}{1}{2026}{ชิล}
-    \planitem{2}{2026}{2}{2026}{เผา}
-    \planitem{12}{2025}{1}{2026}{ทดสอบ}
+    \planitem{7}{2025}{7}{2025}{ขอใช้ข้อมูลและศึกษา Dataset จาก iTrust SUTD}
+    \planitem{8}{2025}{8}{2025}{การเตรียมและทำความสะอาดข้อมูล (preprocessing)}
+    \planitem{9}{2025}{9}{2025}{การออกแบบคุณลักษณะ (feature engineering)}
+    \planitem{9}{2025}{10}{2025}{การกำหนดป้ายกำกับข้อมูล (Labeling)}
+    \planitem{10}{2025}{1}{2026}{การสร้างและฝึกโมเดลหลัก CNN-LSTM}
+    \planitem{12}{2025}{2}{2026}{การสร้างและฝึกโมเดลเปรียบเทียบ CNN และ LSTM)}
+    \planitem{1}{2026}{2}{2026}{การประเมินผลและวิเคราะห์}
+    \planitem{1}{2026}{2}{2026}{การจัดทำต้นแบบสาธิต เขียนรายงานและนำเสนอผลงาน}
+    \caption[Project Plan]{Project Plan}
 \end{plan}
 
-\section{\ifenglish Roles and responsibilities\else บทบาทและความรับผิดชอบ\fi}
-อธิบายว่าในการทำงาน นศ. มีการกำหนดบทบาทและแบ่งหน้าที่งานอย่างไรในการทำงาน จำเป็นต้องใช้ความรู้ใดในการทำงานบ้าง
+\section{\ifenglish Roles and Responsibilities\else บทบาทและความรับผิดชอบ\fi}
+\begin{enumerate}
+    \item นายธนกฤต บุญยัง รหัส 650612084
+    \begin{itemize}
+        \item พัฒนาและปรับแต่งโมเดล CNN-LSTM แบบบูรณาการ รวมถึงการปรับค่า hyperparameters ให้เหมาะสม
+        \item จัดทำการแสดงผลลัพธ์ เช่น กราฟ ตาราง Confusion Matrix และ Anomaly Detection Plot
+        \item เขียนรายงาน สรุปผลการทดลอง จัดทำสไลด์ และนำเสนอผลงาน
+        \item โมเดลที่รับผิดชอบ: CNN-LSTM (เวอร์ชันที่ปรับปรุงแล้ว) และการวิเคราะห์เปรียบเทียบ  
+    \end{itemize}
+
+    \item นายศุภกร สุวรรณภพ รหัส 650612100  
+    \begin{itemize}
+        \item ออกแบบและพัฒนาโมเดล LSTM สําหรับการตรวจจับความผิดปกติของข้อมูลลําดับเวลา
+        \item ประเมินประสิทธิภาพของโมเดล วิเคราะห์ตัวชี้วัด (Precision, Recall, F1-score, AUC) และเปรียบเทียบกับ baseline models
+        \item สนับสนุนการทดสอบความทนทาน (robustness testing) เช่น การเพิ่ม noise และการจำลองข้อมูลที่หายไป
+        \item โมเดลที่รับผิดชอบ: LSTM และ CNN-LSTM  
+    \end{itemize}
+
+    \item นายอดิศร สันเจริญ รหัส 650612104
+    \begin{itemize}
+        \item ค้นหาและจัดการข้อมูล SWaT dataset รวมถึงการทำความสะอาดข้อมูล (cleaning), การทำ normalization, การจัดการ missing values และการทำ windowing สำหรับ time-series
+        \item มีส่วนร่วมในกระบวนการเตรียมข้อมูล การฝึกสอนโมเดล การทดสอบ และการตรวจสอบความถูกต้อง (validation)
+        \item ดำเนินการทดสอบประสิทธิภาพและการเลือก threshold ที่เหมาะสม
+        \item โมเดลที่รับผิดชอบ: CNN และ CNN-LSTM
+    \end{itemize}
+\end{enumerate}
+
 
 \section{\ifenglish%
 Impacts of this project on society, health, safety, legal, and cultural issues

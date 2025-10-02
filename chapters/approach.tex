@@ -21,30 +21,46 @@
 
 \begin{figure}[h]
 \begin{center}
-\includegraphics{800px-Briny_Beach.jpg}
+\includegraphics[width=\textwidth]{Image/System Architecture.png}
 \end{center}
-\caption[Poem]{The Walrus and the Carpenter}
-\label{fig:walrus}
+\caption[System Architecture]{System Architecture}
+\label{fig:System Architecture}
 \end{figure}
 
 \section{การเตรียมข้อมูล (Data Preparation)}
+\hspace{2em} เพื่อให้เห็นลักษณะของข้อมูลจริง ภาพนี้เป็นตัวอย่างการแสดงผลข้อมูลจาก SWaT dataset ซึ่งบันทึกค่าของเซนเซอร์และแอกชูเอเตอร์ในรูปแบบ time-series การแสดงผลในรูปแบบตารางและกราฟช่วยให้เห็นทั้งโครงสร้าง dataset และการเปลี่ยนแปลงของค่าที่เกี่ยวข้องกับเหตุการณ์ผิดปกติ (Anomaly)
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=\textwidth]{Image/dataset1.png}
+\end{center}
+\caption[ตัวอย่าง SWaT dataset]{ตัวอย่าง SWaT dataset จาก itrust SUTD}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=\textwidth]{Image/dataset2.png}
+\end{center}
+\caption[ตัวอย่างแสดงช่วงเวลาที่โดนโจมตีภายใน dataset]{ตัวอย่างแสดงช่วงเวลาที่โดนโจมตีภายใน dataset}
+\end{figure}
+
 \subsection{การโหลดและอ่านชุดข้อมูล (Data Loading)}
-\hspace{2em} ขั้นตอนแรกคือการนำเข้าชุดข้อมูลที่ใช้สำหรับการทดลอง SWaT Dataset ซึ่งเป็นข้อมูลการทำงานของระบบน้ำในอุตสาหกรรมที่บันทึกค่า sensor และ actuator ในรูปแบบ time-series 
-การโหลดข้อมูลอาจใช้เครื่องมืออย่าง Pandas เพื่ออ่านไฟล์ .csv แล้วจัดเก็บให้อยู่ในรูปแบบ DataFrame เพื่อให้สามารถจัดการได้สะดวกในขั้นตอนถัดไป
+\hspace{2em} ข้อมูลที่ใช้คือ SWaT Dataset ซึ่งเก็บค่าการทำงานของเซนเซอร์และแอกชูเอเตอร์ในลักษณะ time-series การโหลดข้อมูลใช้เครื่องมืออย่าง Pandas ในการอ่านไฟล์ .csv และจัดเก็บให้อยู่ในรูป DataFrame เพื่อความสะดวกต่อการวิเคราะห์และ preprocessing
 
 \subsection{การจัดการค่าที่หายไป (Missing Value Handling)}
 \hspace{2em} ข้อมูลที่ได้จากระบบ OT/ICS มักมีปัญหาค่าที่หายไป (missing values) อันเนื่องมาจากปัญหาของ sensor หรือการบันทึกข้อมูล การจัดการอาจทำได้หลายวิธี เช่น
 \begin{enumerate}
   \item การลบข้อมูลแถวที่หายไป (listwise deletion)
-  \item การแทนค่าด้วยสถิติพื้นฐาน (เช่น ค่าเฉลี่ย ค่ามัธยฐาน)
-  \item การแทนค่าด้วยการคำนวณจากข้อมูลรอบข้าง เช่น interpolation ในกรณีข้อมูลเชิงเวลา
+  \item การแทนค่าด้วยสถิติ เช่น ค่าเฉลี่ย (mean) หรือค่ามัธยฐาน (median)
+  \item การแทนค่าด้วยการคำนวณจากข้อมูลรอบข้าง เช่น Interpolation เหมาะกับ time-series
 \end{enumerate}
 
 \subsection{การแยกประเภทคุณลักษณะ (Continuous / Discrete Features)}
 \hspace{2em} ชุดข้อมูลมักประกอบด้วยคุณลักษณะหลายประเภท เช่น
 \begin{enumerate}
-  \item Continuous features: ค่าเซนเซอร์ เช่น ความดัน, อัตราการไหล
-  \item Discrete features: ค่าสถานะ actuator เช่น เปิด/ปิดวาล์ว, เปิด/ปิดปั๊ม \\ การแยกประเภทคุณลักษณะมีความสำคัญเพราะวิธี preprocessing อาจแตกต่างกัน เช่น continuous ต้อง scaling แต่ discrete อาจใช้ encoding
+  \item Continuous features: ค่าจากเซนเซอร์ เช่น ความดัน อัตราการไหล ค่าการนำไฟฟ้า
+  \item Discrete features: ค่าสถานะของแอกชูเอเตอร์ เช่น การเปิด/ปิดวาล์ว และการทำงานของปั๊ม
+ การแยกประเภทนี้สำคัญ เนื่องจากขั้นตอน preprocessing จะแตกต่างกัน เช่น continuous ต้อง scaling แต่ discrete อาจใช้ encoding
 \end{enumerate}
 
 \subsection{การปรับสเกลข้อมูล (Scaling and Normalization)}
@@ -54,44 +70,89 @@
 \end{center}
 
 \subsection{การแบ่งชุดข้อมูล (Training / Testing Split)}
-\hspace{2em} เพื่อป้องกันการ overfitting ต้องแบ่งข้อมูลออกเป็น training set และ testing set เช่น 70/30 หรือ 80/20 ในงาน time-series อาจต้องใช้ sliding window ในการแบ่ง โดยไม่ทำการ shuffle ข้อมูล เพื่อคงลำดับเวลาให้ถูกต้อง
+\hspace{2em} การแบ่งชุดข้อมูลใช้หลักการ time-based split เพื่อป้องกัน data leakage โดยแบ่งเป็น
+\begin{enumerate}
+  \item Training set (ใช้ฝึกโมเดล)
+  \item Validation set (ใช้ปรับ hyperparameter และ early stopping)
+  \item Test set (ใช้ทดสอบประสิทธิภาพจริง)
+\end{enumerate}
+นอกจากนี้ยังใช้ Sliding Window เพื่อสร้าง sequences (window และ step) เพื่อเก็บ temporal dependency
 
 \section{การทำ Feature Engineering}
+การใช้ Sliding Window ช่วยแปลงข้อมูล time-series ให้อยู่ในรูปแบบที่โมเดลสามารถเรียนรู้ pattern ได้ โดยแต่ละ window แทนค่าลำดับข้อมูลในช่วงเวลา เช่น 180 วินาที และเลื่อนด้วย step 30 วินาที และ Correlation Heatmap เพื่อวิเคราะห์ความสัมพันธ์ระหว่าง features ซึ่งใช้เป็นแนวทางในการเลือกหรือตัดคุณลักษณะที่ซ้ำซ้อนออก
+
+\begin{figure}[ht]
+\begin{center}
+      \begin{subfigure}[b]{0.9\textwidth}
+            \includegraphics[width=\textwidth]{Image/window count.png}
+      \end{subfigure}
+          \caption[จำนวนหน้าต่างต่อช่อง (ปกติ vs ผิดปกติ)]{จำนวนหน้าต่างต่อช่อง (ปกติ vs ผิดปกติ)}
+  
+      \vspace{2mm}
+      \begin{subfigure}[b]{\textwidth}
+          \includegraphics[width=\textwidth]{Image/slide window1.png}
+      \end{subfigure}
+          \caption[ไทม์ไลน์แบบหน้าต่างเลื่อน]{ไทม์ไลน์แบบหน้าต่างเลื่อน (สำหรับ Train / Val / Test)}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+      \begin{subfigure}[b]{\textwidth}
+          \includegraphics[width=\textwidth]{Image/slide window2.png}
+    \end{subfigure}
+          \caption[ไทม์ไลน์ของหน้าต่างที่แสดงข้อมูล ปกติ เทียบกับ ผิดปกติ]{ไทม์ไลน์ของหน้าต่างที่แสดงข้อมูล ปกติ เทียบกับ ผิดปกติ (แยกตามการแบ่งข้อมูล)}
+
+    \vspace{2mm}
+    \begin{subfigure}[b]{0.5\textwidth}
+      \includegraphics[width=\textwidth]{Image/heatmap.png}
+    \end{subfigure}
+          \caption[แผนที่ความร้อนของค่าสหสัมพันธ์]{แผนที่ความร้อนของค่าสหสัมพันธ์ (สำหรับตัวแปรเชิงตัวเลข)}
+\end{center}
+\end{figure}
+
 
 \subsection{การเลือกคุณลักษณะที่เกี่ยวข้อง (Feature Selection)}
-\hspace{2em} ไม่ใช่ทุกคุณลักษณะมีความสำคัญต่อการตรวจจับ anomaly การใช้ feature selection จะช่วยลดมิติของข้อมูลและปรับปรุงประสิทธิภาพโมเดล เทคนิคที่ใช้เช่น
+\hspace{2em} เพื่อให้การตรวจจับ anomaly มีประสิทธิภาพสูง ใช้วิธีเลือกคุณลักษณะ เช่น
 \begin{enumerate}
-  \item การวิเคราะห์ Correlation Matrix
-  \item การใช้ Mutual Information
-  \item การใช้ Model-based feature selection เช่น Random Forest
+  \item Correlation Matrix เพื่อตรวจหาความสัมพันธ์ระหว่าง features
+  \item Mutual Information เพื่อตรวจสอบความสำคัญของแต่ละตัวแปร
 \end{enumerate}
 
-
-\subsection{การใช้ Sliding Window กับ Time-series Data}
-\hspace{2em} เนื่องจากข้อมูล ICS/OT เป็น time-series จำเป็นต้องแปลงข้อมูลให้อยู่ในรูป window-based input เช่น สร้าง sequence ขนาด 30 หรือ 60 วินาที เพื่อใช้ในการเรียนรู้ pattern ของระบบ วิธีนี้ช่วยให้โมเดล CNN/LSTM สามารถตรวจจับลักษณะของ anomaly ที่เกิดขึ้นในช่วงเวลาได้
+\subsection{การใช้ Sliding Window (Time-series Transformation)}
+\hspace{2em} ข้อมูล time-series จาก ICS ถูกแปลงให้อยู่ในรูป Window-based Input เพื่อสร้าง sequence ที่โมเดล CNN/LSTM สามารถเรียนรู้ได้
 
 \subsection{การสร้างคุณลักษณะใหม่ (Derived Features)}
 \hspace{2em} สามารถสร้าง feature เพิ่มเติมจากข้อมูลดิบ เช่น
 \begin{enumerate}
   \item ค่า moving average ของเซนเซอร์
   \item ค่าความแตกต่างระหว่างเวลา ($\Delta t$)
-  \item อัตราการเปลี่ยนแปลง (derivatives) \\ สิ่งเหล่านี้ช่วยให้โมเดลจับความผิดปกติได้ดีกว่าการใช้ข้อมูลดิบเพียงอย่างเดียว
+  \item อัตราการเปลี่ยนแปลง (derivatives)
 \end{enumerate}
+สิ่งเหล่านี้ช่วยให้โมเดลจับความผิดปกติได้ดีกว่าการใช้ข้อมูลดิบเพียงอย่างเดียว
 
 \subsection{การตรวจสอบความสัมพันธ์ของคุณลักษณะ (Correlation Analysis)}
-\hspace{2em} การวิเคราะห์ความสัมพันธ์ระหว่าง features เช่น การคำนวณ Pearson Correlation หรือ Spearman Rank Correlation เพื่อดูว่าคุณลักษณะใดสัมพันธ์กันมากเกินไป หาก correlation สูง อาจเลือกตัดบาง feature ทิ้งเพื่อลด redundancy
+\hspace{2em} เพื่อตรวจสอบ multicollinearity หาก features มีความสัมพันธ์สูงเกินไปอาจเลือกตัดออกเพื่อลด redundancy
 
 \section{การออกแบบและพัฒนาโมเดล (Model Design and Development)}
 
-\subsection{การเลือกโมเดลต้นแบบ (CNN Prototype)}
-\hspace{2em} เลือกใช้ Convolutional Neural Network (CNN) เพราะสามารถจับ pattern ในข้อมูล time-series ได้คล้ายกับการประมวลผลภาพ โดยมองว่าแต่ละ sequence เป็น “สัญญาณหลายมิติ” จาก sensor และ actuator
+\subsection{การเลือกโมเดลต้นแบบ (Prototype Model)}
+\hspace{2em} เลือกใช้ CNN และ LSTM เนื่องจากเหมาะกับการเรียนรู้ทั้ง local patterns (CNN) และ temporal dependency (LSTM)
 
 \subsection{สถาปัตยกรรมของโมเดล (Model Architecture)}
-\hspace{2em} Input Layer: รับข้อมูล time-series ที่ผ่าน preprocessing แล้ว
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.5\textwidth]{Image/CNN-LSTM Arch.png}
+\end{center}
+\caption[CNN/LSTM Architecture]{CNN/LSTM Architecture}
+\end{figure}
+
 \begin{enumerate}
   \item Input Layer: รับข้อมูล time-series ที่ผ่าน preprocessing แล้ว
   \item Convolutional Layer: ดึง pattern ที่ซ่อนอยู่จากข้อมูล เช่น ความเปลี่ยนแปลงของ sensor
   \item Pooling Layer: ลดมิติและ noise ทำให้โมเดล generalize ได้ดีขึ้น
+  \item LSTM Layer : จับความสัมพันธ์ของข้อมูลตามเวลา
   \item Fully Connected Layer: รวม feature ที่สกัดมาเพื่อใช้ในการจำแนก anomaly
   \item Output Layer: ใช้ softmax/sigmoid เพื่อตัดสินว่าเป็น “ปกติ” หรือ “ผิดปกติ”
 \end{enumerate}
@@ -110,23 +171,8 @@
 \subsection{ตัวชี้วัดประสิทธิภาพ (Evaluation Metrics)}
 \begin{enumerate}
   \item Accuracy: วัดความถูกต้องโดยรวม
-  \item Precision, Recall, F1-score: วัดความสามารถในการตรวจจับ anomaly โดยไม่แจ้งเตือนผิดพลาด
-  \item Detection Rate (DR), False Alarm Rate (FAR): เน้นการประเมินประสิทธิภาพในการตรวจจับโจมตีและลด false positive
-\end{enumerate}
+  \item Precision, Recall, F1-score: วัดความสามารถในการตรวจจับ anomaly
+  \item Detection Rate (DR), False Alarm Rate (FAR) : เน้นการวัดอัตราการตรวจจับและอัตราการแจ้งเตือนผิดพลาด
+  \item Confusion Matrix, ROC-AUC, PR-AUC : วิเคราะห์เชิงลึกถึงประสิทธิภาพของโมเดล
 
-\section{การประยุกต์ใช้งานและข้อจำกัด (Application and Limitations)}
-\subsection{ศักยภาพในการนำไปใช้จริง (Practical Applications)}
-\hspace{2em} ระบบที่พัฒนาสามารถนำไปใช้ใน โรงงานอุตสาหกรรม เพื่อช่วยตรวจจับพฤติกรรมผิดปกติของเซนเซอร์หรือ อุปกรณ์ เช่น การโจมตีปั๊มน้ำ หรือการเปิดวาล์วโดยไม่ได้รับอนุญาต
-
-\subsection{ข้อจำกัดของโครงงาน (Limitations)}
-\begin{enumerate}
-  \item ใช้ข้อมูลจำลอง (SWaT dataset) แทนข้อมูลจริง
-  \item ทดสอบในสภาพแวดล้อมจำกัด ไม่ครอบคลุมทุกประเภทของการโจมตี
-  \item ความแม่นยำอาจลดลงหากนำไปใช้กับ dataset อื่นที่มีลักษณะแตกต่าง
-\end{enumerate}
-
-\subsection{แนวทางการพัฒนาในอนาคต (Future Work)}
-\begin{enumerate}
-  \item ทดลองใช้โมเดล Hybrid (CNN+LSTM)
-  \item นำ model ไปใช้ในการทำระบบเตือน โดยผ่าน API หรือ Websocket
 \end{enumerate}

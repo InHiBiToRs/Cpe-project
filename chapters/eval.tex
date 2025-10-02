@@ -4,68 +4,68 @@
 \ifenglish System Evaluation\else การประเมินระบบ\fi
 \fi}
 
-ในบทนี้จะทดสอบเกี่ยวกับการทำงานในฟังก์ชันหลักๆ
-
-
-\section{Objective (วัตถุประสงค์การทดสอบ)}
+\section{วัตถุประสงค์การทดสอบ (Objective)}
+\hspace{2em} การประเมินผลของโครงงานนี้มีจุดประสงค์เพื่อวิเคราะห์ประสิทธิภาพของโมเดล CNN-LSTM \\ ที่พัฒนาขึ้นสำหรับการตรวจจับความผิดปกติ (Anomaly Detection) ใน SWaT dataset โดยมีวัตถุประสงค์สำคัญดังนี้:
 \begin{enumerate}
-    \item ตรวจสอบความสามารถของโมเดล CNN-LSTM ในการ แยกแยะสถานะ normal และ anomaly จาก SWaT dataset
-    \item วัดประสิทธิภาพของโมเดลตามตัวชี้วัดมาตรฐาน:
-    \begin{enumerate}
-        \item Precision, Recall, F1-score, AUC
-        \item Detection Delay และ Latency สำหรับการทดสอบแบบ real-time
-    \end{enumerate}
-    \item ตรวจสอบ robustness ของโมเดลต่อ:
-    \begin{enumerate}
-        \item Noise (sensor fluctuation)
-        \item Missing data
-        \item Concept drift หรือ pattern ใหม่ที่ไม่เคยเห็น
-    \end{enumerate}
-    \item เปรียบเทียบ performance กับ baseline models เช่น LSTM, CNN, Autoencoder
+    \item ตรวจสอบความสามารถของโมเดลในการจำแนกสถานะ ปกติ (Normal) และ ผิดปกติ (Anomaly) จากข้อมูล time-series ของ sensor และ actuator
+    \item ประเมินประสิทธิภาพตามตัวชี้วัดมาตรฐาน ได้แก่ Precision, Recall, F1-score, Area Under Curve (ROC-AUC, PR-AUC) เพื่อวัดความแม่นยำเชิงสถิติ
+    \item วิเคราะห์ Detection Delay และ Latency เพื่อพิจารณาความเหมาะสมในการใช้งานเชิงปฏิบัติการแบบ real-time
+    \item ทดสอบความทนทาน (Robustness) ของโมเดลต่อเงื่อนไขที่อาจเกิดขึ้นจริง เช่น
+    \begin{itemize}
+        \item Noise จากความผันผวนของ sensor
+        \item Missing data (ข้อมูลสูญหายระหว่างการเก็บ)
+        \item Concept drift หรือ pattern ใหม่ที่ไม่เคยปรากฏมาก่อน
+    \end{itemize}
+    \item เปรียบเทียบผลลัพธ์กับโมเดล baseline เช่น CNN เดี่ยว, LSTM เดี่ยว, Autoencoder เพื่อยืนยันความเหมาะสมของ CNN-LSTM
 \end{enumerate}
 
 \section{Requirements (ข้อกำหนดการทดสอบ)}
 \subsection{Functional Requirements (ข้อกำหนดเชิงฟังก์ชัน)}
 \begin{enumerate}
-    \item โมเดลต้องสามารถจำแนก Normal vs Anomaly สำหรับข้อมูล time-series
-    \item สามารถแจ้งเตือน (Alert) เมื่อพบ anomaly ได้แบบ real-time หรือ batch
-    \item รองรับ input จาก sensor/actuator ตาม SWaT dataset
-    \item มี visualization/logging ของผลลัพธ์และ reconstruction error (ถ้ามี)
+    \item โมเดลต้องสามารถจำแนกข้อมูล Normal vs Anomaly ได้อย่างถูกต้อง
+    \item ระบบต้องสามารถ แจ้งเตือน (Alert System) ได้ทั้งแบบ batch processing และ real-time detection
+    \item รองรับการนำเข้าข้อมูลจาก sensor/actuator ที่มีโครงสร้างตาม SWaT dataset
+    \item มีการจัดเก็บและนำเสนอผลลัพธ์ในรูปแบบ visualization และ log files (เช่น confusion matrix, error curves)
 \end{enumerate}
 
 \subsection{Non-Functional Requirements (ข้อกำหนดไม่เชิงฟังก์ชัน)}
 \begin{enumerate}
-    \item Accuracy: F1-score $\ge$ 85\% (ตัวอย่าง benchmark)
-    \item Latency: การทำนาย ≤ 20 ms ต่อ window (real-time)
-    \item Robustness: Performance degradation ≤ $\ge$ 10\% เมื่อมี noise/missing data
-    \item Scalability: รองรับจำนวน sensor ≥ 50 และ batch size ≥ 64
-    \item Usability: รายงานผลลัพธ์ในรูปแบบตาราง/กราฟเข้าใจง่าย
+    \item Accuracy Benchmark: ค่าคะแนน F1-score ต้องไม่ต่ำกว่า $\ge$ 85\% (อ้างอิง benchmark งานวิจัยที่เกี่ยวข้อง)
+    \item Latency: การทำนายผลแต่ละ window ต้องใช้เวลา ≤ 20 ms เพื่อรองรับ real-time operation
+    \item Robustness: ประสิทธิภาพต้องลดลงไม่เกิน $\ge$ 10\% ภายใต้เงื่อนไข noise หรือ missing data
+    \item Scalability: รองรับจำนวน sensor อย่างน้อย 50 ตัว และ batch size ≥ 64
+    \item Usability: ผลลัพธ์ต้องสามารถแสดงในรูป ตารางและกราฟ ที่เข้าใจง่ายต่อผู้ปฏิบัติการ
 \end{enumerate}
 
 \subsection{Dataset Requirements}
 \begin{enumerate}
-    \item ใช้ SWaT dataset: Normal logs สำหรับ train, Normal + Attack logs สำหรับ test
-    \item แบ่งข้อมูลเป็น training/validation/test sets อย่างเหมาะสม
-    \item Preprocessing: normalization, windowing, imputation for missing data
+    \item ใช้ SWaT dataset โดยแบ่งเป็น Normal logs สำหรับการฝึกโมเดล และ Normal + Attack logs สำหรับการทดสอบ
+    \item การแบ่งข้อมูลต้องเป็น Training / Validation / Testing sets โดยพิจารณาลำดับเวลาเพื่อป้องกัน data leakage
+    \item ต้องทำการ Preprocessing เช่น normalization, sliding window, และการแทนค่าข้อมูลที่หายไป (imputation)
 \end{enumerate}
 
-\section{Testing Strategy (กลยุทธ์การทดสอบ)}
-\subsection{Types of Testing}
+\section{กลยุทธ์การทดสอบ (Testing Strategy)}
+\subsection{ประเภทของการทดสอบ (Types of Testing)}
 \begin{enumerate}
-    \item Functional Testing:
+    \item Functional Testing
     \begin{enumerate}
-        \item ตรวจสอบว่าโมเดลสามารถระบุ anomaly ใน test set ได้ถูกต้อง
-        \item ตรวจสอบ alert system สำหรับ online detection
+        \item ตรวจสอบความถูกต้องในการจำแนก anomaly ใน test set
+        \item ทดสอบการทำงานของ alert system ในสภาพ online detection
     \end{enumerate}
-    \item Performance Testing:
+    \item Performance Testing
     \begin{enumerate}
-        \item ประเมิน Precision, Recall, F1-score, AUC
-        \item วัด latency และ throughput
+        \item ประเมินผลด้วย Precision, Recall, F1-score, ROC-AUC และ PR-AUC
+        \item วัด latency และ throughput ของระบบ
     \end{enumerate}
-    \item Robustness Testing:
+    \item Robustness Testing
     \begin{enumerate}
-        \item เพิ่ม noise ในข้อมูล sensor
-        \item ลอง missing values (random drop)
-        \item ตรวจสอบ model performance ต่อ concept drift หรือ attack ใหม่
-    \end{enumerate}\item Comparison Testing: \\ เปรียบเทียบกับ baseline models: LSTM, CNN, Autoencoder
+        \item เพิ่ม noise ลงในข้อมูล sensor และวัดผลลัพธ์
+        \item จำลองการ missing values แบบสุ่มและวิเคราะห์ผลกระทบ
+        \item ทดสอบ response ต่อ concept drift หรือการโจมตีที่ไม่เคยปรากฏใน training
+    \end{enumerate}
+    \item Comparison Testing
+    \begin{itemize}
+        \item เปรียบเทียบกับ baseline models ได้แก่ LSTM, CNN, Autoencoder
+        \item วิเคราะห์ผลลัพธ์เพื่อยืนยันข้อดีของโมเดล CNN-LSTM
+    \end{itemize}
 \end{enumerate}
