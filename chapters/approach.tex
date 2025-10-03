@@ -174,5 +174,36 @@
   \item Precision, Recall, F1-score: วัดความสามารถในการตรวจจับ anomaly
   \item Detection Rate (DR), False Alarm Rate (FAR) : เน้นการวัดอัตราการตรวจจับและอัตราการแจ้งเตือนผิดพลาด
   \item Confusion Matrix, ROC-AUC, PR-AUC : วิเคราะห์เชิงลึกถึงประสิทธิภาพของโมเดล
-
 \end{enumerate}
+
+\section{การประยุกต์ใช้งานและข้อจำกัด (Application, Integration \& Limitations)}
+
+\subsection{ ศักยภาพในการนำไปใช้จริง (Practical Applications)}
+\hspace{2em} โมเดลที่พัฒนาสามารถนำไปใช้ในโรงงานอุตสาหกรรมจริงเพื่อเฝ้าระวังและตรวจจับพฤติกรรมผิดปกติของเซนเซอร์หรืออุปกรณ์ เช่น การโจมตีที่ปั๊มน้ำหรือวาล์ว โดยสามารถ ต่อยอดสู่ระบบจริงได้ดังนี้:
+
+\begin{enumerate}
+  \item Integration เข้ากับ SCADA System: โมเดล anomaly detection สามารถทำงานเป็น service ภายนอกที่เชื่อมกับ SCADA ผ่าน API หรือ OPC (OLE for Process Control) โดยดึงข้อมูลจาก historian หรือ real-time tags ของเซนเซอร์/แอกชูเอเตอร์มาใช้ตรวจจับความผิดปกติ
+  \item การเชื่อมกับ PLC: โมเดลสามารถรับค่าจาก PLC (ผ่านโปรโตคอลเช่น Modbus/TCP หรือ EtherNet/IP) เพื่อตรวจสอบพฤติกรรมของอุปกรณ์แบบ real-time และสามารถส่ง “Alert” หรือ “Flag” กลับไปที่ PLC/SCADA เพื่อให้ระบบทำ action เช่น การหยุดปั๊ม การปิดวาล์ว หรือแจ้งเตือนผู้ปฏิบัติการ
+  \item Real-time Dashboard: พัฒนา dashboard ที่เชื่อมกับระบบ SCADA แสดงผลลัพธ์ anomaly detection เช่น timeline ของเหตุการณ์ผิดปกติ, อัตราการแจ้งเตือน, และสถิติการทำงาน เพื่อให้ผู้ปฏิบัติการตัดสินใจได้อย่างทันท่วงที
+  \item การทำงานร่วมกับระบบความปลอดภัยเดิม (Defense-in-Depth): prototype สามารถเป็น “เสริมชั้น” การป้องกัน (additional defense layer) ที่ทำงานร่วมกับ firewall, IDS/IPS ในเครือข่าย ICS เพื่อเพิ่มระดับการตรวจสอบจากระดับเครือข่ายลงสู่ระดับ process data
+\end{enumerate}
+
+\subsection{ข้อจำกัดของโครงงาน (Limitations)}
+\begin{enumerate}
+  \item ใช้ข้อมูลจำลอง (SWaT Dataset) ที่แม้จะใกล้เคียงโรงงานจริง แต่ไม่ครอบคลุมรูปแบบการโจมตีทั้งหมด
+  \item โมเดลยังไม่ผ่านการทดสอบบนสภาพแวดล้อม real-time streaming ที่มี delay/latency และ noise จาก field device จริง
+  \item ความแม่นยำอาจลดลงหาก dataset ที่ใช้ในอนาคตมีคุณลักษณะแตกต่างจาก SWaT (domain shift)
+  \item ข้อจำกัดเชิง integration เช่น ความเข้ากันได้ของโปรโตคอล (protocol compatibility) และการจัดการ real-time constraints
+\end{enumerate}
+
+
+\subsection{แนวทางการพัฒนาในอนาคต (Future Work)}
+\begin{enumerate}
+  \item พัฒนาต่อยอดจากโมเดล CNN-LSTM โดยเพิ่ม Attention Mechanisms หรือปรับใช้ \\ Transformer-based Architectures เพื่อให้สามารถจับความสัมพันธ์ที่ซับซ้อนและยาวนานระหว่างเซนเซอร์ได้ดียิ่งขึ้น
+  \item พัฒนาการเชื่อมต่อกับ ระบบ SCADA/PLC โดยตรง (real-time interface) เพื่อลด latency ของการตรวจจับและตอบสนอง
+  \item สร้างระบบแจ้งเตือนอัจฉริยะ (Smart Alarm) ที่ลด false positive และเชื่อมกับระบบ Incident Response ของโรงงาน
+  \item ปรับใช้ร่วมกับระบบ Security Information and Event Management (SIEM) ขององค์กร เพื่อรวม anomaly logs เข้ากับ event logs ด้าน IT/OT อื่นๆ
+  \item ขยายการทดสอบกับ datasets อื่นๆ เช่น WADI หรือ ICS datasets ที่หลากหลาย เพื่อทดสอบการ generalization
+\end{enumerate}
+
+
